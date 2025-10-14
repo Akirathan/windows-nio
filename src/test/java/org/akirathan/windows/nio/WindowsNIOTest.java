@@ -25,8 +25,7 @@ public class WindowsNIOTest {
     createDirs(tmpDir.toPath());
     SimpleEnsoFile.delete(tmpDir.toPath(), true);
     assertThat(tmpDir.exists(), is(false));
-    var wasCreated = tmpDir.mkdirs();
-    assertThat(wasCreated, is(true));
+    SimpleEnsoFile.createDirectories(tmpDir.toPath());
     assertThat(tmpDir.exists(), is(true));
   }
 

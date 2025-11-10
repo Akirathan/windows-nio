@@ -33,10 +33,14 @@ public class WindowsNIOTest {
   public void createAndDeleteDirInLoop() throws IOException {
     var tmpDir = tmpFolder.newFolder();
     var dir = tmpDir.toPath().resolve("dir");
-    Files.createDirectories(dir);
-    for (int i = 0; i < 1_000; i++) {
-      Files.delete(dir);
+    var file = dir.resolve("file.txt");
+    for (int i = 0; i < 1_00; i++) {
       Files.createDirectories(dir);
+      try (var writer = Files.newBufferedWriter(file, StandardOpenOption.CREATE_NEW)) {
+        writer.write("Iteration " + i);
+      }
+      Files.delete(file);
+      Files.delete(dir);
     }
   }
 

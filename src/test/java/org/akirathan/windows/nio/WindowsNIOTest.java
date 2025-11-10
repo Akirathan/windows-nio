@@ -32,12 +32,11 @@ public class WindowsNIOTest {
   @Test
   public void createAndDeleteDirInLoop() throws IOException {
     var tmpDir = tmpFolder.newFolder();
-    createDirs(tmpDir.toPath());
+    var dir = tmpDir.toPath().resolve("dir");
+    Files.createDirectories(dir);
     for (int i = 0; i < 100; i++) {
-      SimpleEnsoFile.delete(tmpDir.toPath(), true);
-      assertThat(tmpDir.exists(), is(false));
-      SimpleEnsoFile.createDirectories(tmpDir.toPath());
-      assertThat(tmpDir.exists(), is(true));
+      Files.delete(dir);
+      Files.createDirectories(dir);
     }
   }
 

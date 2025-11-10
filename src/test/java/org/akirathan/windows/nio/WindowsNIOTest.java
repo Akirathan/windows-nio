@@ -29,6 +29,18 @@ public class WindowsNIOTest {
     assertThat(tmpDir.exists(), is(true));
   }
 
+  @Test
+  public void createAndDeleteDirInLoop() throws IOException {
+    var tmpDir = tmpFolder.newFolder();
+    createDirs(tmpDir.toPath());
+    for (int i = 0; i < 100; i++) {
+      SimpleEnsoFile.delete(tmpDir.toPath(), true);
+      assertThat(tmpDir.exists(), is(false));
+      SimpleEnsoFile.createDirectories(tmpDir.toPath());
+      assertThat(tmpDir.exists(), is(true));
+    }
+  }
+
   private static void createDirs(Path rootDir) throws IOException {
     var dirA = rootDir.resolve("A");
     var dirB = dirA.resolve("B");

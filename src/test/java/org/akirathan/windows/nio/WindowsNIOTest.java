@@ -34,7 +34,7 @@ public class WindowsNIOTest {
     var tmpDir = tmpFolder.newFolder();
     var dir = tmpDir.toPath().resolve("dir");
     Files.createDirectories(dir);
-    for (int i = 0; i < 100; i++) {
+    for (int i = 0; i < 1_000; i++) {
       Files.delete(dir);
       Files.createDirectories(dir);
     }

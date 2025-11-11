@@ -34,13 +34,10 @@ public class WindowsNIOTest {
     var tmpDir = tmpFolder.newFolder();
     var dir = tmpDir.toPath().resolve("dir");
     var file = dir.resolve("file.txt");
+    Files.createDirectories(dir);
     for (int i = 0; i < 1_00; i++) {
-      Files.createDirectories(dir);
-      try (var writer = Files.newBufferedWriter(file, StandardOpenOption.CREATE_NEW)) {
-        writer.write("Iteration " + i);
-      }
-      Files.delete(file);
       Files.delete(dir);
+      Files.createDirectories(dir);
     }
   }
 

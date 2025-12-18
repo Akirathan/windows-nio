@@ -65,7 +65,7 @@ public class WindowsFetchFromJarTest {
   private static void zipDirectory(Path dirToZip, Path zipOut) throws IOException {
     try (var outputStream =
              Files.newOutputStream(
-                 zipOut, StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING)) {
+                 zipOut, StandardOpenOption.CREATE_NEW)) {
       try (var zipOutStream = new ZipOutputStream(outputStream)) {
         try (var inputDirStream = Files.walk(dirToZip)) {
           inputDirStream

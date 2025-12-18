@@ -41,7 +41,7 @@ public class WindowsFetchFromJarTest {
     var zipFileURI = zipFilePath.toUri();
     URI fileInJarURI;
     if (isOnWindows()) {
-      fileInJarURI = URI.create("jar:" + zipFileURI + "!\\subidr\\file.txt");
+      fileInJarURI = URI.create("jar:" + zipFileURI + "!/subdir/file.txt");
     } else {
       fileInJarURI = URI.create("jar:" + zipFileURI + "!/subdir/file.txt");
     }

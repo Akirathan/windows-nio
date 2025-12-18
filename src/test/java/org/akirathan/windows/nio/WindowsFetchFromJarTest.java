@@ -27,7 +27,7 @@ public class WindowsFetchFromJarTest {
   @Before
   public void setup() throws IOException {
     var tmpDir = tmpFolder.newFolder();
-    var subdir = tmpDir.toPath().resolve("subidr");
+    var subdir = tmpDir.toPath().resolve("subdir");
     subdir.toFile().mkdirs();
     var fileInSubdir = subdir.resolve("file.txt");
     Files.writeString(fileInSubdir, "This is a test file.", StandardOpenOption.CREATE_NEW);
@@ -43,7 +43,7 @@ public class WindowsFetchFromJarTest {
     if (isOnWindows()) {
       fileInJarURI = URI.create("jar:" + zipFileURI + "!\\subidr\\file.txt");
     } else {
-      fileInJarURI = URI.create("jar:" + zipFileURI + "!/subidr/file.txt");
+      fileInJarURI = URI.create("jar:" + zipFileURI + "!/subdir/file.txt");
     }
     var conn = fileInJarURI.toURL().openConnection();
     try (var is = conn.getInputStream()) {

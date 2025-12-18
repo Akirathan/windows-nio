@@ -16,7 +16,6 @@ import java.util.zip.ZipOutputStream;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
-import static org.hamcrest.Matchers.containsString;
 
 
 public class WindowsFetchFromJarTest {
@@ -39,12 +38,7 @@ public class WindowsFetchFromJarTest {
   @Test
   public void testFetchFileFromZip_ViaURLConnection() throws Exception {
     var zipFileURI = zipFilePath.toUri();
-    URI fileInJarURI;
-    if (isOnWindows()) {
-      fileInJarURI = URI.create("jar:" + zipFileURI + "!/subdir/file.txt");
-    } else {
-      fileInJarURI = URI.create("jar:" + zipFileURI + "!/subdir/file.txt");
-    }
+    var fileInJarURI = URI.create("jar:" + zipFileURI + "!/subdir/file.txt");
     var conn = fileInJarURI.toURL().openConnection();
     try (var is = conn.getInputStream()) {
       var content = new String(is.readAllBytes());
@@ -57,11 +51,6 @@ public class WindowsFetchFromJarTest {
     }
   }
 
-  private static boolean isOnWindows() {
-    String osName = System.getProperty("os.name").toLowerCase();
-    return osName.contains("win");
-  }
-
   private static void zipDirectory(Path dirToZip, Path zipOut) throws IOException {
     try (var outputStream =
              Files.newOutputStream(
@@ -72,7 +61,7 @@ public class WindowsFetchFromJarTest {
               .filter(path -> !Files.isDirectory(path))
               .forEach(
                   path -> {
-                    var zipEntryName = dirToZip.relativize(path).toString();
+                    var zipEntryName = normalizeZipEntryName(dirToZip.relativize(path).toString());
                     try {
                       zipOutStream.putNextEntry(new ZipEntry(zipEntryName));
                       Files.copy(path, zipOutStream);
@@ -84,5 +73,9 @@ public class WindowsFetchFromJarTest {
         }
       }
     }
+  }
+
+  private static String normalizeZipEntryName(String path) {
+    return path.replace('\\', '/');
   }
 }

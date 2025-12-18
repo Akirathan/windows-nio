@@ -39,12 +39,27 @@ public class WindowsFetchFromJarTest {
   @Test
   public void testFetchFileFromZip_ViaURLConnection() throws Exception {
     var zipFileURI = zipFilePath.toUri();
-    var fileInJarURI = URI.create("jar:" + zipFileURI + "!/subidr/file.txt");
+    URI fileInJarURI;
+    if (isOnWindows()) {
+      fileInJarURI = URI.create("jar:" + zipFileURI + "!\\subidr\\file.txt");
+    } else {
+      fileInJarURI = URI.create("jar:" + zipFileURI + "!/subidr/file.txt");
+    }
     var conn = fileInJarURI.toURL().openConnection();
     try (var is = conn.getInputStream()) {
       var content = new String(is.readAllBytes());
       assertThat(content, is("This is a test file."));
+    } catch (IOException e) {
+      System.err.println(
+          "fileInJarURI: " + fileInJarURI
+      );
+      throw new AssertionError(e);
     }
+  }
+
+  private static boolean isOnWindows() {
+    String osName = System.getProperty("os.name").toLowerCase();
+    return osName.contains("win");
   }
 
   private static void zipDirectory(Path dirToZip, Path zipOut) throws IOException {
